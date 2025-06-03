@@ -4,9 +4,38 @@ import { ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
+type BreadcrumbLinkType = {
+  href?: string;
+  label: string;
+  isCurrent?: boolean;
+};
+
+interface BreadcrumbProps {
+  links: BreadcrumbLinkType[];
 }
+
+const Breadcrumb = ({ links }: BreadcrumbProps) => {
+  return (
+      <BreadcrumbList>
+        {links.map((link, idx) => {
+          const isLast = idx === links.length - 1;
+
+          return (
+            <React.Fragment key={idx}>
+              <BreadcrumbItem>
+                {link.isCurrent || isLast ? (
+                  <BreadcrumbPage>{link.label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink href={link.href}>{link.label}</BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              {!isLast && <BreadcrumbSeparator />}
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+  );
+};
 
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
